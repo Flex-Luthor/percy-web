@@ -53,6 +53,20 @@ npm run start
 
 Then, access [http://dev.percy.local:4200](http://dev.percy.local:4200)
 
+### Using the production api with full oauth flow
+
+Configure redirect pattern `https://percy.io/api/auth/github/callback?redirect_to=http://dev.percy.local:4200/login` => `http://dev.percy.local:4200/api/auth/github/callback?redirect_to=http://dev.percy.local:4200/login` with switcheroo chrome extension https://github.com/ranjez/Switcheroo
+
+#### In fastboot mode
+
+To start percy in fastboot mode:
+
+```bash
+PERCY_WEB_API_HOST_FASTBOOT=http://dev.percy.local:9090 npm run fastboot-dev
+```
+
+You can also set `PERCY_WEB_AUTH_TOKEN_FASTBOOT` and update `PERCY_WEB_API_HOST_FASTBOOT` to point at the production API, same as above.
+
 ## Run tests
 
 ```bash

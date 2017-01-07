@@ -5,42 +5,43 @@ import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 export default BaseAuthenticator.extend({
   store: Ember.inject.service(),
   analytics: Ember.inject.service(),
-  restore() {
-    let store = this.get('store');
+  fastboot: Ember.inject.service(),
+
+  restore(data) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      store.queryRecord('user', {}).then((userRecord) => {
-        if (window.Intercom) {
-          window.Intercom('update', {
-            name: userRecord.get('name'),
-            email: userRecord.get('email'),
-            created_at: userRecord.get('createdAt').getTime() / 1000,
-          });
+        if (!this._validate(data)) {
+          reject();
+        } else {
+          resolve(data);
         }
-        this.get('analytics').identifyUser(userRecord);
-        resolve({user: userRecord});
-      }, reject);
-    });
+      });
   },
   authenticate(options) {
     let store = this.get('store');
     return new Ember.RSVP.Promise((resolve) => {
       store.queryRecord('user', {}).then((userRecord) => {
-        if (window.Intercom) {
-          window.Intercom('update', {
-            name: userRecord.get('name'),
-            email: userRecord.get('email'),
-            created_at: userRecord.get('createdAt').getTime() / 1000,
-          });
+        if (!this.get('fastboot.isFastBoot')) {
+          if (window.Intercom) {
+            window.Intercom('update', {
+              name: userRecord.get('name'),
+              email: userRecord.get('email'),
+              created_at: userRecord.get('createdAt').getTime() / 1000,
+            });
+          }
         }
         this.get('analytics').identifyUser(userRecord);
-        resolve({user: userRecord});
+        resolve({_user: userRecord});
       }, () => {
         // Build params if given a custom final redirect location.
         var finalRedirect;
         options = options || {};
         if (options.redirectTo) {
           var parser = document.createElement('a');
-          parser.href = window.location.href;
+          if (this.get('fastboot.isFastBoot')) {
+            parser.href = this.get('fastboot.request.path');
+          } else {
+            parser.href = window.location.href;
+          }
           parser.pathname = '/login';
           parser.search = '?redirect_to=' + encodeURIComponent(options.redirectTo);
           finalRedirect = parser.href;
@@ -68,5 +69,8 @@ export default BaseAuthenticator.extend({
         reject(xhr);
       });
     });
+  },
+  _validate(data) {
+    return data._user && data._user.login;
   }
 });

@@ -44,7 +44,13 @@ export default {
         path = path.replace('%@', arg);
       });
     }
-    return window.location.origin + path + queryParams;
+    let host = 'https://percy.io/';
+    if (config.PERCY_WEB_API_HOST) {
+      host = config.PERCY_WEB_API_HOST;
+    } else if (window && window.location) {
+      host = window.location.origin;
+    }
+    return host + path + queryParams;
   },
   getQueryParam(param) {
     var query = window.location.search.substring(1);

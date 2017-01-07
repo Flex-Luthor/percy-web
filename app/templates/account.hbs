@@ -4,7 +4,7 @@
   <a href="#" class="u-pull-right Button" {{action "invalidateSession"}}>Logout</a>
   <h2>Account</h2>
   <p>
-    {{fa-icon "github"}} <strong><a href="{{session.data.authenticated.user.githubUrl}}">@{{session.data.authenticated.user.login}}</a></strong> ({{session.data.authenticated.user.name}})
+    {{fa-icon "github"}} <strong><a href="{{currentUser.user.githubUrl}}">@{{currentUser.user.login}}</a></strong> ({{currentUser.user.name}})
   </p>
   {{!-- TODO: drop this. --}}
   <div class="Alert Alert--warning">

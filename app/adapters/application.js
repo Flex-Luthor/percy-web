@@ -1,9 +1,26 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 import utils from 'percy-web/lib/utils';
+import Ember from 'ember';
+import config from '../config/environment';
 
 export default DS.JSONAPIAdapter.extend({
   namespace: 'api/v1',
+  host: Ember.computed(function() {
+    if (config.PERCY_WEB_API_HOST) {
+      return config.PERCY_WEB_API_HOST;
+    } else {
+      return undefined;
+    }
+  }),
+
+  headers: Ember.computed(function() {
+    if (config.PERCY_WEB_AUTH_TOKEN) {
+      return {'Authorization': `Token token=${config.PERCY_WEB_AUTH_TOKEN}`};
+    } else {
+      return {};
+    }
+  }),
 
   headers: Ember.computed(function() {
     let headers = {};
