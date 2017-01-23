@@ -9,6 +9,7 @@
   "scripts": {
     "build": "ember build",
     "start": "ember server",
+    "fastboot-dev": "DEBUG=express,ember-cli-fastboot:* ember fastboot --serve-assets --port 4200",
     "start-production-for-testing": "ember server --environment=production",
     "build-production": "ember build --environment=production",
     "test": "ember test",
