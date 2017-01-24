@@ -11,7 +11,7 @@ export default BaseFormComponent.extend({
   session: Ember.inject.service(),
   currentUser: Ember.inject.service(),
   isCurrentUser: Ember.computed('organizationUser', 'currentUser.user', function() {
-    return this.get('organizationUser.id') === this.get('currentUser.user.id');
+    return this.get('organizationUser.user.id') === this.get('currentUser.user.id');
   }),
   deleteText: Ember.computed('isCurrentUser', function() {
     if (this.get('isCurrentUser')) {

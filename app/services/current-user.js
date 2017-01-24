@@ -5,6 +5,8 @@ export default Ember.Service.extend({
   store: Ember.inject.service(),
   analytics: Ember.inject.service(),
 
+  user: null,
+
   load() {
     if (this.get('session.isAuthenticated')) {
       return this.get('store').queryRecord('user', {}).then((user) => {

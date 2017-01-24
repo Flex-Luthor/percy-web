@@ -179,19 +179,7 @@ describe('Acceptance: Organization', function() {
 
       click('.PricingSection-bucket:contains("Small") a:contains("Select Plan")');
       andThen(() => expect(currentPath()).to.equal('pricing'));
-      percySnapshot(this.test + '| select organization');
-
-      /* disabled as sometimes fails with
-         Assertion Failed: You modified concatenatedTriggerClasses twice on
-         <percy-web@component:power-select::ember10645}
-
-        //let EnterKey = 13;
-        //keyEvent('input[type=search].ember-power-select-search-input', 'keydown', EnterKey);
-        click('li:contains("My Organization 0")');
-
-        andThen(() => expect(currentPath()).to.equal('organizations.organization.billing'));
-        percySnapshot(this.test + '| organization billing');
-      */
+      percySnapshot(this.test.fullTitle() + '| select organization');
     });
     context('organization is on trial account',function() {
       setupSession(function(server) {

@@ -31,43 +31,45 @@ export default BaseAuthenticator.extend({
         }
         this.get('analytics').identifyUser(userRecord);
         resolve({_user: userRecord});
-      }, () => {
+      }, (reason) => {
+        console.log("failure reason", reason);
         // Build params if given a custom final redirect location.
         var finalRedirect;
         options = options || {};
-        if (options.redirectTo) {
-          var parser = document.createElement('a');
-          if (this.get('fastboot.isFastBoot')) {
-            parser.href = this.get('fastboot.request.path');
-          } else {
+
+        if (!this.get('fastboot.isFastBoot')) {
+          if (options.redirectTo) {
+            var parser = document.createElement('a');
             parser.href = window.location.href;
+            parser.pathname = '/login';
+            parser.search = '?redirect_to=' + encodeURIComponent(options.redirectTo);
+            finalRedirect = parser.href;
+          } else {
+            finalRedirect = '/login';
           }
-          parser.pathname = '/login';
-          parser.search = '?redirect_to=' + encodeURIComponent(options.redirectTo);
-          finalRedirect = parser.href;
-        } else {
-          finalRedirect = '/login';
+          // Redirect to GitHub auth.
+          window.location = utils.buildApiUrl('login', {params: {redirect_to: finalRedirect}});
         }
-        // Redirect to GitHub auth.
-        window.location = utils.buildApiUrl('login', {params: {redirect_to: finalRedirect}});
       });
     });
   },
   invalidate() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.$.ajax({
-        type: 'GET',
-        url: utils.buildApiUrl('logout')
-      }).done((data) => {
-        // If a user clicks Logout, make sure we clear all the persistent storage locations.
-        this.get('analytics').invalidate();
-        if (window.localStorage) {
-          window.localStorage.clear();
-        }
-        resolve(data);
-      }).fail(function(xhr) {
-        reject(xhr);
-      });
+      if (!this.get('fastboot.isFastBoot')) {
+        Ember.$.ajax({
+          type: 'GET',
+          url: utils.buildApiUrl('logout')
+        }).done((data) => {
+          // If a user clicks Logout, make sure we clear all the persistent storage locations.
+          this.get('analytics').invalidate();
+          if (window.localStorage) {
+            window.localStorage.clear();
+          }
+          resolve(data);
+        }).fail(function(xhr) {
+          reject(xhr);
+        });
+      }
     });
   },
   _validate(data) {

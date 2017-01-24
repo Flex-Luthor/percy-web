@@ -5,6 +5,8 @@ import Ember from 'ember';
 import config from '../config/environment';
 
 export default DS.JSONAPIAdapter.extend({
+  fastboot: Ember.inject.service(),
+
   namespace: 'api/v1',
   host: Ember.computed(function() {
     if (config.PERCY_WEB_API_HOST) {
@@ -18,7 +20,16 @@ export default DS.JSONAPIAdapter.extend({
     if (config.PERCY_WEB_AUTH_TOKEN) {
       return {'Authorization': `Token token=${config.PERCY_WEB_AUTH_TOKEN}`};
     } else {
-      return {};
+      if (this.get('fastboot.isFastBoot')) {
+        let headers = this.get('fastboot.request.headers');
+        if (headers.headers.cookie) {
+          return {'Cookie': headers.headers.cookie};
+        } else {
+          return {};
+        }
+      } else {
+        return {};
+      }
     }
   }),
 
