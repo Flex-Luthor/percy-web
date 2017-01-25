@@ -32,7 +32,6 @@ export default BaseAuthenticator.extend({
         this.get('analytics').identifyUser(userRecord);
         resolve({_user: userRecord});
       }, (reason) => {
-        console.log("failure reason", reason);
         // Build params if given a custom final redirect location.
         var finalRedirect;
         options = options || {};
