@@ -56,10 +56,8 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
-    if (process.env.PERCY_DEV_MIRAGE === 'yes') {
-      ENV['ember-cli-mirage'] = {
-        enabled: true
-      }
+    ENV['ember-cli-mirage'] = {
+      enabled: (process.env.PERCY_DEV_MIRAGE === 'yes')
     }
     if (process.env.PERCY_WEB_AUTH_TOKEN) {
       ENV['PERCY_WEB_AUTH_TOKEN'] = process.env.PERCY_WEB_AUTH_TOKEN;
