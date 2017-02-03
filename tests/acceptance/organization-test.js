@@ -171,7 +171,8 @@ describe('Acceptance: Organization', function() {
         return percySnapshot(this.test.fullTitle() + ' | invalid modification');
       });
     });
-    it('pricing', function() {
+
+    it('can select pricing', function() {
       visit('/login');
       visit('/pricing');
       andThen(() => expect(currentPath()).to.equal('pricing'));

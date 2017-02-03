@@ -9,16 +9,16 @@ export default DS.JSONAPIAdapter.extend({
 
   namespace: 'api/v1',
   host: Ember.computed(function() {
-    if (config.PERCY_WEB_API_HOST) {
-      return config.PERCY_WEB_API_HOST;
+    if (config.PERCY_WEB_API_HOST_FASTBOOT) {
+      return config.PERCY_WEB_API_HOST_FASTBOOT;
     } else {
       return undefined;
     }
   }),
 
   headers: Ember.computed(function() {
-    if (config.PERCY_WEB_AUTH_TOKEN) {
-      return {'Authorization': `Token token=${config.PERCY_WEB_AUTH_TOKEN}`};
+    if (config.PERCY_WEB_AUTH_TOKEN_FASTBOOT) {
+      return {'Authorization': `Token token=${config.PERCY_WEB_AUTH_TOKEN_FASTBOOT}`};
     } else {
       if (this.get('fastboot.isFastBoot')) {
         let headers = this.get('fastboot.request.headers');

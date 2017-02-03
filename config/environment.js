@@ -59,11 +59,12 @@ module.exports = function(environment) {
     ENV['ember-cli-mirage'] = {
       enabled: (process.env.PERCY_DEV_MIRAGE === 'yes')
     }
-    if (process.env.PERCY_WEB_AUTH_TOKEN) {
-      ENV['PERCY_WEB_AUTH_TOKEN'] = process.env.PERCY_WEB_AUTH_TOKEN;
+    /* TODO remove once we have http-proxy in fastboot */
+    if (process.env.PERCY_WEB_AUTH_TOKEN_FASTBOOT) {
+      ENV['PERCY_WEB_AUTH_TOKEN_FASTBOOT'] = process.env.PERCY_WEB_AUTH_TOKEN_FASTBOOT;
     }
-    if (process.env.PERCY_WEB_API_HOST) {
-      ENV['PERCY_WEB_API_HOST'] = process.env.PERCY_WEB_API_HOST;
+    if (process.env.PERCY_WEB_API_HOST_FASTBOOT) {
+      ENV['PERCY_WEB_API_HOST_FASTBOOT'] = process.env.PERCY_WEB_API_HOST_FASTBOOT;
     }
     ENV.APP.githubUrls = {
       integration: 'https://github.com/integrations/percy-dev/installations/new',
