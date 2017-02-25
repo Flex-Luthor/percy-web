@@ -1,45 +1,28 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 import utils from 'percy-web/lib/utils';
-import Ember from 'ember';
 import config from '../config/environment';
 
 export default DS.JSONAPIAdapter.extend({
   fastboot: Ember.inject.service(),
 
   namespace: 'api/v1',
-  host: Ember.computed(function() {
-    if (config.PERCY_WEB_API_HOST_FASTBOOT) {
-      return config.PERCY_WEB_API_HOST_FASTBOOT;
-    } else {
-      return undefined;
-    }
-  }),
-
   headers: Ember.computed(function() {
-    if (config.PERCY_WEB_AUTH_TOKEN_FASTBOOT) {
-      return {'Authorization': `Token token=${config.PERCY_WEB_AUTH_TOKEN_FASTBOOT}`};
-    } else {
-      if (this.get('fastboot.isFastBoot')) {
-        let headers = this.get('fastboot.request.headers');
-        if (headers.headers.cookie) {
-          return {'Cookie': headers.headers.cookie};
-        } else {
-          return {};
-        }
+    if (this.get('fastboot.isFastBoot')) {
+      let headers = this.get('fastboot.request.headers');
+      if (headers.headers.cookie) {
+        return {'Cookie': headers.headers.cookie};
       } else {
         return {};
       }
+    } else {
+      let headers = {};
+      let percyMode = window.localStorage && window.localStorage.getItem('percyMode');
+      if (percyMode) {
+        headers['X-Percy-Mode'] = percyMode;
+      }
+      return headers;
     }
-  }),
-
-  headers: Ember.computed(function() {
-    let headers = {};
-    let percyMode = window.localStorage && window.localStorage.getItem('percyMode');
-    if (percyMode) {
-      headers['X-Percy-Mode'] = percyMode;
-    }
-    return headers;
   }),
 
   isInvalid(status) {
