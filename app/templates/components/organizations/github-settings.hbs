@@ -12,8 +12,8 @@
       checked={{if (eq changeset.githubAuthMechanism "github-integration") "checked"}}
       {{action "changeSelection" preventDefault=false}}
     >
-    <span class="label-body">Official GitHub Integration (recommended)</span>
-    <p>Install Percy's first-party GitHub Integration with customizable access control.</p>
+    <span class="label-body">GitHub Integration</span>
+    <p>Shows visual change status in GitHub pull requests. Has customizable access control.</p>
   </label>
   {{#if (eq changeset.githubAuthMechanism "github-integration")}}
     {{organizations/github-integrator organization=organization showSupport="showSupport"}}
